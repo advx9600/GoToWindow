@@ -69,5 +69,20 @@ namespace GoToWindow.Properties {
                 this["KeepOpenOnLostFocus"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsShowMenuTip
+        {
+            get
+            {
+                return ((bool)(this["IsShowMenuTip"]));
+            }
+            set
+            {
+                this["IsShowMenuTip"] = value;
+            }
+        }
     }
 }

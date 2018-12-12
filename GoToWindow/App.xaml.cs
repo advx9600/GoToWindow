@@ -78,7 +78,12 @@ namespace GoToWindow
 			}
 			else
 			{
-				_menu.ShowStartupTooltip();
+                if (GoToWindow.Properties.Settings.Default.IsShowMenuTip)
+                {
+                    GoToWindow.Properties.Settings.Default.IsShowMenuTip = false;
+                    GoToWindow.Properties.Settings.Default.Save();
+                    _menu.ShowStartupTooltip();
+                }
 			}
 
 			SquirrelContext.AcquireUpdater().CheckForUpdates(_context.UpdateAvailable, null);
