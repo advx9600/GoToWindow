@@ -53,5 +53,17 @@ namespace GoToWindow.Plugins.Core.ViewModel
 
 	        return IconLoader.LoadIcon(_entry.IconHandle, executable);
 	    }
+
+        public static BitmapFrame LoadIcon(IWindowEntry win)
+        {
+            string executable;
+
+            using (var process = Process.GetProcessById((int)win.ProcessId))
+            {
+                executable = process.GetExecutablePath();
+            }
+
+            return IconLoader.LoadIcon(win.IconHandle, executable);
+        }
 	}
 }
