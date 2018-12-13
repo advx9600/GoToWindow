@@ -45,8 +45,12 @@ namespace GoToWindow.Api
 
 			try
 			{
-				//If running on Vista or later use the new function
-				return Environment.OSVersion.Version.Major >= 6
+                //If running on Vista or later use the new function
+                if (!string.IsNullOrEmpty(process.MainModule.FileName))
+                {
+                    return process.MainModule.FileName; ;
+                }
+                return Environment.OSVersion.Version.Major >= 6
 					? GetExecutablePathAboveVista(process.Id)
 					: process.MainModule.FileName;
 			}
