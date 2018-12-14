@@ -121,10 +121,10 @@ namespace GoToWindow.Api
 
 			if (keyInfo.VkCode == _shortcut.VirtualKeyCode && (GetAsyncKeyState(_shortcut.ControlVirtualKeyCode) < 0))
 			{
-				_downCounter++;
+				//_downCounter++;
 
-				if (_downCounter < _shortcut.ShortcutPressesBeforeOpen)
-					return CallNextHookEx(_hookID, nCode, wParam, lParam);
+				//if (_downCounter < _shortcut.ShortcutPressesBeforeOpen)
+				//	return CallNextHookEx(_hookID, nCode, wParam, lParam);
 
 				_callback();
 				return (IntPtr) 1;
