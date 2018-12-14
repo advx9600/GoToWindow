@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
@@ -51,7 +54,16 @@ namespace GoToWindow
 			PluginsContainer = GoToWindowPluginsContainer.LoadPlugins();
 		}
 
-		public void Show()
+        private MainWindow2 mainWindow2 = new MainWindow2();
+        public void Show()
+        {
+            lock (_lock)
+            {
+                mainWindow2.ShowFront();
+                
+            }
+        }
+       public void ShowOld()
 		{
 			lock (_lock)
 			{

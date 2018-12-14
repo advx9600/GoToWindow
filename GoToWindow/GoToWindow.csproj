@@ -141,6 +141,10 @@
     <Compile Include="Windows\FirstRunWindow.xaml.cs">
       <DependentUpon>FirstRunWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\MainWindow2.xaml.cs">
+      <DependentUpon>MainWindow2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MyButton.cs" />
     <Compile Include="Windows\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -163,6 +167,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Windows\MainWindow2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -214,6 +222,10 @@
     <ProjectReference Include="..\GoToWindow.Extensibility\GoToWindow.Extensibility.csproj">
       <Project>{672a2aa6-16b3-49bc-8fd8-535da2f17a82}</Project>
       <Name>GoToWindow.Extensibility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GoToWindow.Plugins.Core\GoToWindow.Plugins.Core.csproj">
+      <Project>{05405483-F47A-42C1-BB03-57E3D1B56918}</Project>
+      <Name>GoToWindow.Plugins.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

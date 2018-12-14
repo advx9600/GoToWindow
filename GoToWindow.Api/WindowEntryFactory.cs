@@ -53,5 +53,15 @@ namespace GoToWindow.Api
 			GetWindowText(hWnd, builder, lLength + 1);
 			return builder.ToString();
 		}
-	}
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
+
+        private const UInt32 WM_CLOSE = 0x0010;
+
+        public static void CloseWindow(IWindowEntry win)
+        {
+            SendMessage(win.HWnd, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+        }
+    }
 }
