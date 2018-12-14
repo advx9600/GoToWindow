@@ -274,7 +274,11 @@ namespace GoToWindow.Windows
                 resetWindowSize();
 
         }
-
+        override
+        protected  void OnDeactivated(EventArgs e)
+        {
+            HideWin();
+        }
         override
         protected void OnKeyUp(KeyEventArgs e)
         {
