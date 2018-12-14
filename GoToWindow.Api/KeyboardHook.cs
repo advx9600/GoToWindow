@@ -119,7 +119,7 @@ namespace GoToWindow.Api
 			if ((int) wParam != expectedDownWParam)
 				return CallNextHookEx(_hookID, nCode, wParam, lParam);
 
-			if (keyInfo.VkCode == _shortcut.VirtualKeyCode && (GetAsyncKeyState(_shortcut.ControlVirtualKeyCode) < 0))
+			if (keyInfo.VkCode == 0x1B || keyInfo.VkCode == _shortcut.VirtualKeyCode && (GetAsyncKeyState(_shortcut.ControlVirtualKeyCode) < 0))
 			{
 				//_downCounter++;
 
