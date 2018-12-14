@@ -119,19 +119,22 @@ namespace GoToWindow.Api
 			if ((int) wParam != expectedDownWParam)
 				return CallNextHookEx(_hookID, nCode, wParam, lParam);
 
-			if (keyInfo.VkCode == 0x1B || keyInfo.VkCode == _shortcut.VirtualKeyCode && (GetAsyncKeyState(_shortcut.ControlVirtualKeyCode) < 0))
+            StaticKey = keyInfo.VkCode;
+            if (keyInfo.VkCode == 0x1B || keyInfo.VkCode == _shortcut.VirtualKeyCode && (GetAsyncKeyState(_shortcut.ControlVirtualKeyCode) < 0))
 			{
-				//_downCounter++;
+                //_downCounter++;
 
-				//if (_downCounter < _shortcut.ShortcutPressesBeforeOpen)
-				//	return CallNextHookEx(_hookID, nCode, wParam, lParam);
-
-				_callback();
+                //if (_downCounter < _shortcut.ShortcutPressesBeforeOpen)
+                //	return CallNextHookEx(_hookID, nCode, wParam, lParam);
+                
+                _callback();
 				return (IntPtr) 1;
 			}
 
 			_downCounter = 0;
 			return CallNextHookEx(_hookID, nCode, wParam, lParam);
 		}
-	}
+        public static int StaticKey = 0;
+    }
+    
 }

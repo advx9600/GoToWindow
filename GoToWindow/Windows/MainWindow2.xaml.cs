@@ -180,37 +180,81 @@ namespace GoToWindow.Windows
                 {
                     mFocusBtn.Focus();
                 }
-
-            }
-        }
-        protected override void OnPreviewKeyDown(KeyEventArgs e)
-        {
-            if (Keyboard.Modifiers == ModifierKeys.Alt && e.SystemKey == Key.F4 ||
-               Keyboard.Modifiers == ModifierKeys.Control && e.SystemKey == Key.Escape)
-            {
-                e.Handled = true;
             }
             else
             {
-                base.OnPreviewKeyDown(e);
+                // 接收 alt + tab 和 alt + shift +tab和 alt + esc按键
+                onHotkeyEvent((Key)KeyboardHook.StaticKey, Key.Enter);
             }
-
         }
 
         override
         protected void OnKeyDown(KeyEventArgs e)
         {
-            switch (e.Key)
+            onHotkeyEvent(e.SystemKey, Key.Down);
+        }
+
+        private void MoveFocus(FocusNavigationDirection direction)
+        {
+            //var request = new TraversalRequest(direction);
+            TraversalRequest request = new TraversalRequest(direction);
+
+            // Gets the element with keyboard focus.
+            UIElement elementWithFocus = Keyboard.FocusedElement as UIElement;
+
+            // Change keyboard focus.
+            if (elementWithFocus != null)
             {
-                case Key.Escape: HideWin(); break;
-                case Key.Delete: removeWindow(); break;
-                default: onHotkeyEvent(e.Key, Key.Down); break;
+                elementWithFocus.MoveFocus(request);
             }
         }
 
-        private void onHotkeyEvent(Key key, Key down)
-        {
+        [DllImport("user32.dll ", SetLastError = true)]
+        private static extern void SwitchToThisWindow(IntPtr hWnd, bool fAltTab);
 
+        [DllImport("user32.dll", EntryPoint = "ShowWindow", CharSet = CharSet.Auto)]
+        private static extern int ShowWindow(IntPtr hwnd, int nCmdShow);
+        private void onHotkeyEvent(Key key, Key direct)
+        {
+            Console.WriteLine(key + "  " + direct);
+            if (direct == Key.Enter)
+            {
+                if (Key.KanaMode == key) // tab key
+                {
+                    if (!Keyboard.IsKeyDown(Key.LeftShift))
+                    {
+                        this.MoveFocus(FocusNavigationDirection.Next);
+                    }
+                    else
+                    {
+                        this.MoveFocus(FocusNavigationDirection.Previous);
+                    }
+                }
+                else if (Key.Select == key) // esc key
+                {
+                    HideWin();
+                }
+            }
+            else if (direct == Key.Up)
+            {
+                // 逻辑上只需要捕捉alt键，但有时候按键太快，还需要捕捉tab键
+                if (key == Key.Tab && !Keyboard.IsKeyDown(Key.LeftAlt) || key == Key.LeftAlt)
+                {
+                    var tag = (IWindowEntry)mFocusBtn.Tag;
+                    ShowWindow(tag.HWnd, 1);
+                    SwitchToThisWindow(tag.HWnd, true);
+                    HideWin();
+                }
+            }
+            else if (direct == Key.Down)
+            {
+                switch (key)
+                {
+                    case Key.Delete: removeWindow(); break;
+                    case Key.Right: this.MoveFocus(FocusNavigationDirection.Next); break;
+                    case Key.Left: this.MoveFocus(FocusNavigationDirection.Previous);break;
+                }
+            }
         }
 
         private void removeWindow()
