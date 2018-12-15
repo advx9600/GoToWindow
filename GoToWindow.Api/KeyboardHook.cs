@@ -126,8 +126,8 @@ namespace GoToWindow.Api
 
                 //if (_downCounter < _shortcut.ShortcutPressesBeforeOpen)
                 //	return CallNextHookEx(_hookID, nCode, wParam, lParam);
-                
-                _callback();
+                if (wParam == (IntPtr)WM_SYSKEYDOWN)
+                    _callback();
 				return (IntPtr) 1;
 			}
 
