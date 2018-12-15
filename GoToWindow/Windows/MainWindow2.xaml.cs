@@ -173,6 +173,11 @@ namespace GoToWindow.Windows
         private void Btn_GotFocus(object sender, RoutedEventArgs e)
         {
             mFocusBtn = sender as Button;
+
+            if (Keyboard.IsKeyUp(Key.LeftAlt))
+            {
+                onHotkeyEvent(Key.LeftAlt, Key.Up);
+            }
         }
 
         private Button mRightClickBtn;
@@ -196,6 +201,9 @@ namespace GoToWindow.Windows
         private WindowsList mWins;
         private Button mFocusBtn;
         private List<TbHotKeyEntry> mListHotkey;
+        private byte VK_MENU = 18;
+        private int KEYEVENTF_EXTENDEDKEY =1;
+        private int KEYEVENTF_KEYUP =2;
 
         public void ShowFront()
         {
@@ -207,9 +215,8 @@ namespace GoToWindow.Windows
                 Show();
                 // 需要确保显示
                 IntPtr hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
-                ShowWindow(hwnd, 1);
-                SwitchToThisWindow(hwnd, true);
 
+                SetForegroundWindowInternal(hwnd);
                 if (mWins != null && mWins.Windows.Count > 1)
                 {
                     mFocusBtn.Focus();
@@ -243,6 +250,23 @@ namespace GoToWindow.Windows
             }
         }
 
+        // https://www.codeproject.com/Tips/76427/How-to-bring-window-to-top-with-SetForegroundWindo
+        // https://www.cnblogs.com/rosesmall/p/5759804.html
+        // https://blog.csdn.net/chengjunlin0793/article/details/49950387
+        private void SetForegroundWindowInternal(IntPtr hWnd)
+        {
+            if (!SetForegroundWindow(hWnd))
+            {
+                keybd_event(VK_MENU, 0, KEYEVENTF_EXTENDEDKEY | 0, 0);
+                SetForegroundWindow(hWnd);
+                keybd_event(VK_MENU, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+            }
+        }
+        [DllImport("User32.dll")]
+        public static extern void keybd_event(Byte bVk, Byte bScan, Int32 dwFlags, Int32 dwExtraInfo);
+
+        [DllImport("user32.dll ", SetLastError = true)]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
         [DllImport("user32.dll ", SetLastError = true)]
         private static extern void SwitchToThisWindow(IntPtr hWnd, bool fAltTab);
 
