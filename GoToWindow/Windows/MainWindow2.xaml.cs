@@ -44,7 +44,7 @@ namespace GoToWindow.Windows
             }
             if (!find)
             {
-                win.hotKey =0;
+                win.hotKey = 0;
             }
         }
         const int setElementWidth = 60;
@@ -164,7 +164,7 @@ namespace GoToWindow.Windows
         {
             mListHotkey = Database.GetAllHotKey();
             // 把key更新
-            foreach(var win in mWins.Windows)
+            foreach (var win in mWins.Windows)
             {
                 SetHotkey(win);
             }
@@ -173,11 +173,6 @@ namespace GoToWindow.Windows
         private void Btn_GotFocus(object sender, RoutedEventArgs e)
         {
             mFocusBtn = sender as Button;
-
-            if (Keyboard.IsKeyUp(Key.LeftAlt))
-            {
-                onHotkeyEvent(Key.LeftAlt, Key.Up);
-            }
         }
 
         private Button mRightClickBtn;
@@ -202,8 +197,8 @@ namespace GoToWindow.Windows
         private Button mFocusBtn;
         private List<TbHotKeyEntry> mListHotkey;
         private byte VK_MENU = 18;
-        private int KEYEVENTF_EXTENDEDKEY =1;
-        private int KEYEVENTF_KEYUP =2;
+        private int KEYEVENTF_EXTENDEDKEY = 1;
+        private int KEYEVENTF_KEYUP = 2;
 
         public void ShowFront()
         {
@@ -280,7 +275,8 @@ namespace GoToWindow.Windows
         }
         private void onHotkeyEvent(Key key, Key direct)
         {
-            //Console.WriteLine(key + "  " + direct);
+            // Console.WriteLine(key + "  " + direct+" alt:"+ Keyboard.IsKeyDown(Key.LeftAlt));
+            
             if (direct == Key.Enter)
             {
                 if (Key.KanaMode == key) // tab key
@@ -301,12 +297,7 @@ namespace GoToWindow.Windows
             }
             else if (direct == Key.Up)
             {
-                // 逻辑上只需要捕捉alt键，但有时候按键太快，还需要捕捉tab键
-                if (key == Key.Tab && !Keyboard.IsKeyDown(Key.LeftAlt) || key == Key.LeftAlt)
-                {
-                    var tag = (IWindowEntry)mFocusBtn.Tag;
-                    showWin(tag);
-                }
+                if (key == Key.Escape) HideWin();
             }
             else if (direct == Key.Down)
             {
@@ -316,9 +307,23 @@ namespace GoToWindow.Windows
                     case Key.Right: this.MoveFocus(FocusNavigationDirection.Next); break;
                     case Key.Left: this.MoveFocus(FocusNavigationDirection.Previous); break;
                     default:
-                        foreach (var item in mWins.Windows) { if (item.hotKey > 0 && item.hotKey == (int)key) { showWin(item); break; } }
+                        var find = false; foreach (var item in mWins.Windows) { if (item.hotKey > 0 && item.hotKey == (int)key) { find = true; showWin(item); break; } }
+                        if (!find)
+                        {
+                            // 如果不是自定义的热键
+                            switch (key)
+                            {
+                                case Key.D2: for (var i = 1; i < mWins.Windows.Count; i++) { if (mWins.Windows.ElementAt(0).ProcessName.Equals(mWins.Windows.ElementAt(i).ProcessName)) { showWin(mWins.Windows.ElementAt(i)); break; } } break; // 数字键2,打开第二个相同的程序窗口
+                            }
+                        }
                         break;
                 }
+            }
+            // 逻辑上只需要捕捉alt键，但有时候按键太快,会捕捉失败，需要特别判断
+            if (Keyboard.IsKeyUp(Key.LeftAlt) && isShow)
+            {
+                var tag = (IWindowEntry)mFocusBtn.Tag;
+                showWin(tag);
             }
         }
 

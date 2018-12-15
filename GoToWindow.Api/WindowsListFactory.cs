@@ -94,12 +94,12 @@ namespace GoToWindow.Api
 
 			UpdateProcessName(window);
 			windows.Add(window);
-			LogDebugWindow("- Found normal window: ", window, className);
+			//LogDebugWindow("- Found normal window: ", window, className);
 		}
 
 	    private static void InspectWindows10AppWindow(IntPtr hWnd, ICollection<IWindowEntry> windows, string className)
 	    {
-		    Log.Debug("- Found Window 10 App");
+		    //Log.Debug("- Found Window 10 App");
 
 		    var foundChildren = false;
 			GetWindowThreadProcessId(hWnd, out uint processId);
@@ -107,7 +107,7 @@ namespace GoToWindow.Api
 			EnumChildWindows(hWnd, (childHWnd, lparam) =>
 		    {
 				GetWindowThreadProcessId(childHWnd, out uint childProcessId);
-				Log.Debug("  - Checking process: " + childProcessId);
+				//Log.Debug("  - Checking process: " + childProcessId);
 			    if (processId != childProcessId)
 			    {
 				    var childClassName = GetClassName(hWnd);
@@ -165,7 +165,7 @@ namespace GoToWindow.Api
 	    [Conditional("DEBUG")]
 	    private static void LogDebugWindow(string message, WindowEntry window, string className)
 	    {
-			Log.Debug(message + window + ", Class: " + className);
+			//Log.Debug(message + window + ", Class: " + className);
 	    }
 
 	    private static bool ClassEligibleForActivation(string className)

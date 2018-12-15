@@ -243,8 +243,9 @@ namespace GoToWindow
 
 		private void HandleShortcut()
 		{
-			Application.Current.Dispatcher.InvokeAsync(Show, DispatcherPriority.Normal);
-		}
+            Show();
+            //Application.Current.Dispatcher.InvokeAsync(Show, DispatcherPriority.Normal);
+        }
 
 		private void _mainViewModel_Close(object sender, CloseEventArgs e)
 		{

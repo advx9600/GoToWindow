@@ -23,7 +23,7 @@ namespace GoToWindow.Commands
 
 		public void Execute(object parameter)
 		{
-			_context.Show();
+			//_context.Show();
 		}
 	}
 }
