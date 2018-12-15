@@ -2,36 +2,38 @@
 
 namespace GoToWindow.Api
 {
-	public class WindowEntry : IWindowEntry
-	{
-		public IntPtr HWnd { get; set; }
-		public uint ProcessId { get; set; }
-	    public string Title { get; set; }
+    public class WindowEntry : IWindowEntry
+    {
+        public IntPtr HWnd { get; set; }
+        public uint ProcessId { get; set; }
+        public string Title { get; set; }
         public IntPtr IconHandle { get; set; }
         public bool IsVisible { get; set; }
         public string ProcessName { get; set; }
+        public int hotKey { get; set; }
+        public Action onHotkeyUpdate { get; set; }
 
-		public bool Focus()
-		{
-			return WindowToForeground.ForceWindowToForeground(HWnd);
-		}
+        public bool Focus()
+        {
+            return WindowToForeground.ForceWindowToForeground(HWnd);
+        }
 
-		public bool IsForeground()
-		{
-			return WindowToForeground.GetForegroundWindow() == HWnd;
-		}
+        public bool IsForeground()
+        {
+            return WindowToForeground.GetForegroundWindow() == HWnd;
+        }
 
-		public bool IsSameWindow(IWindowEntry other)
-		{
-			if (other == null)
-				return false;
+        public bool IsSameWindow(IWindowEntry other)
+        {
+            if (other == null)
+                return false;
 
-			return ProcessId == other.ProcessId && HWnd == other.HWnd;
-		}
+            return ProcessId == other.ProcessId && HWnd == other.HWnd;
+        }
 
-		public override string ToString()
-		{
+        public override string ToString()
+        {
             return $"{ProcessName} ({ProcessId}): \"{Title}\"";
-		}
-	}
+        }
+    }
 }

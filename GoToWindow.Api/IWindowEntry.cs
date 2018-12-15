@@ -16,5 +16,9 @@ namespace GoToWindow.Api
 		bool Focus();
 		bool IsForeground();
 		bool IsSameWindow(IWindowEntry other);
-	}
+
+        int hotKey { get; set; }
+
+        Action onHotkeyUpdate { get; set; }
+    }
 }

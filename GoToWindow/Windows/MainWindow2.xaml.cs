@@ -27,15 +27,26 @@ namespace GoToWindow.Windows
         {
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             InitializeComponent();
+            mListHotkey = Database.GetAllHotKey();
         }
 
+        private void SetHotkey(IWindowEntry win)
+        {
+            foreach (var item in mListHotkey)
+            {
+                if (win.ProcessName.Equals(item.name))
+                {
+                    win.hotKey = item.key;
+                    break;
+                }
+            }
+        }
         const int setElementWidth = 60;
         const int setElementMargin = 10;
 
         public void resetData()
         {
             var isNeedRest = false;
-
             var wins = WindowsListFactory.Load();
             if (mWins == null)
             {
@@ -56,7 +67,8 @@ namespace GoToWindow.Windows
                 for (int i = 0; i < wins.Windows.Count; i++)
                 {
                     var win = wins.Windows.ElementAt(i);
-                    Console.WriteLine(i + "   " + win.ProcessName);
+                    SetHotkey(win);
+                    //Console.WriteLine(i + "   " + win.ProcessName);
                     int findIndex = -1;
                     for (int j = 0; j < mWins.Windows.Count; j++)
                     {
@@ -106,10 +118,8 @@ namespace GoToWindow.Windows
                             isNeedRest = true;
                             stackPanel.Children.RemoveRange(wins.Windows.Count, mWins.Windows.Count - wins.Windows.Count);
                         }
-                        mWins = wins;
                     }
                 }
-
             }
 
             if (isNeedRest)
@@ -140,7 +150,14 @@ namespace GoToWindow.Windows
             btn.FocusVisualStyle = (Style)FindResource("newFocusStyle");
             btn.PreviewMouseDown += Btn_PreviewMouseDown;
             btn.Tag = win;
+            win.onHotkeyUpdate = OnHotkeyUpdateEvent;
+            SetHotkey(win);
             return btn;
+        }
+
+        private void OnHotkeyUpdateEvent()
+        {
+            mListHotkey = Database.GetAllHotKey();
         }
 
         private void Btn_GotFocus(object sender, RoutedEventArgs e)
@@ -148,6 +165,7 @@ namespace GoToWindow.Windows
             mFocusBtn = sender as Button;
         }
 
+        private Button mRightClickBtn;
         private void Btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -158,6 +176,7 @@ namespace GoToWindow.Windows
             {
                 ContextMenu cm = this.FindResource("cmButton") as ContextMenu;
                 cm.PlacementTarget = sender as Button;
+                mRightClickBtn = sender as Button;
                 cm.IsOpen = true;
             }
         }
@@ -166,7 +185,7 @@ namespace GoToWindow.Windows
         private bool isShow = false;
         private WindowsList mWins;
         private Button mFocusBtn;
-
+        private List<TbHotKeyEntry> mListHotkey;
 
         public void ShowFront()
         {
@@ -174,8 +193,13 @@ namespace GoToWindow.Windows
             {
                 isShow = true;
                 resetData();
-                Show();
                 Activate();
+                Show();
+                // 需要确保显示
+                IntPtr hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
+                ShowWindow(hwnd, 1);
+                SwitchToThisWindow(hwnd, true);
+
                 if (mWins != null && mWins.Windows.Count > 1)
                 {
                     mFocusBtn.Focus();
@@ -214,9 +238,15 @@ namespace GoToWindow.Windows
 
         [DllImport("user32.dll", EntryPoint = "ShowWindow", CharSet = CharSet.Auto)]
         private static extern int ShowWindow(IntPtr hwnd, int nCmdShow);
+        private void showWin(IWindowEntry tag)
+        {
+            ShowWindow(tag.HWnd, 1);
+            SwitchToThisWindow(tag.HWnd, true);
+            HideWin();
+        }
         private void onHotkeyEvent(Key key, Key direct)
         {
-            Console.WriteLine(key + "  " + direct);
+            //Console.WriteLine(key + "  " + direct);
             if (direct == Key.Enter)
             {
                 if (Key.KanaMode == key) // tab key
@@ -241,9 +271,7 @@ namespace GoToWindow.Windows
                 if (key == Key.Tab && !Keyboard.IsKeyDown(Key.LeftAlt) || key == Key.LeftAlt)
                 {
                     var tag = (IWindowEntry)mFocusBtn.Tag;
-                    ShowWindow(tag.HWnd, 1);
-                    SwitchToThisWindow(tag.HWnd, true);
-                    HideWin();
+                    showWin(tag);
                 }
             }
             else if (direct == Key.Down)
@@ -252,7 +280,10 @@ namespace GoToWindow.Windows
                 {
                     case Key.Delete: removeWindow(); break;
                     case Key.Right: this.MoveFocus(FocusNavigationDirection.Next); break;
-                    case Key.Left: this.MoveFocus(FocusNavigationDirection.Previous);break;
+                    case Key.Left: this.MoveFocus(FocusNavigationDirection.Previous); break;
+                    default:
+                        foreach (var item in mWins.Windows) { if (item.hotKey > 0 && item.hotKey == (int)key) { showWin(item); break; } }
+                        break;
                 }
             }
         }
@@ -275,7 +306,7 @@ namespace GoToWindow.Windows
 
         }
         override
-        protected  void OnDeactivated(EventArgs e)
+        protected void OnDeactivated(EventArgs e)
         {
             HideWin();
         }
@@ -294,7 +325,8 @@ namespace GoToWindow.Windows
         }
         private void MenuItem_Add_Shortcut_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("aadsf");
+            var win = new WinShortcut();
+            win.Show(mRightClickBtn.Tag as IWindowEntry);
         }
     }
 }
