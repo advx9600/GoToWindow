@@ -137,6 +137,8 @@ namespace GoToWindow.Windows
         {
             Height = 100;
             Width = stackPanel.Children.Count * (setElementWidth + setElementMargin * 2) + 20;
+            Left = SystemParameters.PrimaryScreenWidth / 2 - Width / 2;
+            Top = SystemParameters.PrimaryScreenHeight / 2 - Height / 2;
         }
         private Button buildBtn(IWindowEntry win, int setElementWidth, int setElementMargin)
         {
@@ -276,7 +278,7 @@ namespace GoToWindow.Windows
         private void onHotkeyEvent(Key key, Key direct)
         {
             // Console.WriteLine(key + "  " + direct+" alt:"+ Keyboard.IsKeyDown(Key.LeftAlt));
-            
+
             if (direct == Key.Enter)
             {
                 if (Key.KanaMode == key) // tab key
