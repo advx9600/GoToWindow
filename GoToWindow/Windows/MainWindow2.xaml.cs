@@ -32,13 +32,19 @@ namespace GoToWindow.Windows
 
         private void SetHotkey(IWindowEntry win)
         {
+            bool find = false;
             foreach (var item in mListHotkey)
             {
                 if (win.ProcessName.Equals(item.name))
                 {
                     win.hotKey = item.key;
+                    find = true;
                     break;
                 }
+            }
+            if (!find)
+            {
+                win.hotKey =0;
             }
         }
         const int setElementWidth = 60;
@@ -67,7 +73,6 @@ namespace GoToWindow.Windows
                 for (int i = 0; i < wins.Windows.Count; i++)
                 {
                     var win = wins.Windows.ElementAt(i);
-                    SetHotkey(win);
                     //Console.WriteLine(i + "   " + win.ProcessName);
                     int findIndex = -1;
                     for (int j = 0; j < mWins.Windows.Count; j++)
@@ -158,6 +163,11 @@ namespace GoToWindow.Windows
         private void OnHotkeyUpdateEvent()
         {
             mListHotkey = Database.GetAllHotKey();
+            // 把key更新
+            foreach(var win in mWins.Windows)
+            {
+                SetHotkey(win);
+            }
         }
 
         private void Btn_GotFocus(object sender, RoutedEventArgs e)

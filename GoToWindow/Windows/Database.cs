@@ -43,6 +43,7 @@ namespace GoToWindow.Windows
         public void ExeSQL(string sql)
         {
             var cmd = GetSQLCmd(sql);
+            //Console.WriteLine(sql);
             cmd.ExecuteNonQuery();
         }
 
@@ -57,6 +58,8 @@ namespace GoToWindow.Windows
             db.Open();
             using (var dr = db.ExeQuerySQL(string.Format("select key from {0} where name='{1}'", db.TB_HOTKEY, win.ProcessName)))
             {
+                // 把原来先设置好的快捷键取消
+                db.ExeSQL(String.Format("update {0} set key=0 where key={1}", db.TB_HOTKEY,win.hotKey));
                 if (dr.Read())
                 {
                     db.ExeSQL(String.Format("update {0} set key={1} where name='{2}'", db.TB_HOTKEY, win.hotKey, win.ProcessName));

@@ -54,8 +54,8 @@ namespace GoToWindow.Windows
             if (win.hotKey != (int)key)
             {
                 win.hotKey = (int)key;
-                win.onHotkeyUpdate();
                 Database.updateHotkey(win);
+                win.onHotkeyUpdate();
             }
         }
     }
