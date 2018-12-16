@@ -123,5 +123,18 @@ namespace GoToWindow.Api
 
 			return result;
 		}
-	}
+
+        // https://www.codeproject.com/Tips/76427/How-to-bring-window-to-top-with-SetForegroundWindo
+        // https://www.cnblogs.com/rosesmall/p/5759804.html
+        // https://blog.csdn.net/chengjunlin0793/article/details/49950387
+        public static void SetForegroundWindowInternal(IntPtr hWnd)
+        {
+            if (!SetForegroundWindow(hWnd))
+            {
+                KeyboardSend.Alt_KEYEVENTF_EXTENDEDKEY();
+                SetForegroundWindow(hWnd);
+                KeyboardSend.Alt_KEYEVENTF_KEYUP();
+            }
+        }
+    }
 }

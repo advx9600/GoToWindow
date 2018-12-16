@@ -43,6 +43,7 @@
     <Compile Include="..\GoToWindow.Shared\Properties\AssemblyInfo.Shared.cs">
       <Link>Properties\AssemblyInfo.Shared.cs</Link>
     </Compile>
+    <Compile Include="KeyboardHookAlt.cs" />
     <Compile Include="ModifierVirtualKeys.cs" />
     <Compile Include="KeyboardHook.cs" />
     <Compile Include="IWindowEntry.cs" />

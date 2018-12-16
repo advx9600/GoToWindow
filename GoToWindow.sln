@@ -49,6 +49,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Properties", "Properties", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AAATest", "AAATest\AAATest.csproj", "{B5472F9B-55DE-4824-9155-752ABEF33E08}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GotoWindow2", "GotoWindow2\GotoWindow2.csproj", "{D0826963-4EE3-4322-B54E-4C08BD617FA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,6 +94,10 @@ Global
 		{B5472F9B-55DE-4824-9155-752ABEF33E08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5472F9B-55DE-4824-9155-752ABEF33E08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5472F9B-55DE-4824-9155-752ABEF33E08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0826963-4EE3-4322-B54E-4C08BD617FA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0826963-4EE3-4322-B54E-4C08BD617FA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0826963-4EE3-4322-B54E-4C08BD617FA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0826963-4EE3-4322-B54E-4C08BD617FA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

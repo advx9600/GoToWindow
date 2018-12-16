@@ -1,8 +1,8 @@
 ﻿using GoToWindow.Api;
 using GoToWindow.Plugins.Core.ViewModel;
+using GotoWindow2.DB;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -14,20 +14,22 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GoToWindow.Windows
+namespace GotoWindow2.Windows
 {
     /// <summary>
-    /// MainWindow2.xaml 的交互逻辑
+    /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow2 : Window
+    public partial class MainWindow : Window
     {
-        public MainWindow2()
+        public MainWindow()
         {
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             InitializeComponent();
             mListHotkey = Database.GetAllHotKey();
+            // set hook
         }
 
         private void SetHotkey(IWindowEntry win)
@@ -164,7 +166,7 @@ namespace GoToWindow.Windows
 
         private void OnHotkeyUpdateEvent()
         {
-            mListHotkey = Database.GetAllHotKey();
+            mListHotkey = DB.Database.GetAllHotKey();
             // 把key更新
             foreach (var win in mWins.Windows)
             {
@@ -198,9 +200,6 @@ namespace GoToWindow.Windows
         private WindowsList mWins;
         private Button mFocusBtn;
         private List<TbHotKeyEntry> mListHotkey;
-        private byte VK_MENU = 18;
-        private int KEYEVENTF_EXTENDEDKEY = 1;
-        private int KEYEVENTF_KEYUP = 2;
 
         public void ShowFront()
         {
@@ -213,7 +212,7 @@ namespace GoToWindow.Windows
                 // 需要确保显示
                 IntPtr hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
 
-                SetForegroundWindowInternal(hwnd);
+                WindowToForeground.SetForegroundWindowInternal(hwnd);
                 if (mWins != null && mWins.Windows.Count > 1)
                 {
                     mFocusBtn.Focus();
@@ -222,7 +221,7 @@ namespace GoToWindow.Windows
             else
             {
                 // 接收 alt + tab 和 alt + shift +tab和 alt + esc按键
-                onHotkeyEvent((Key)KeyboardHook.StaticKey, Key.Enter);
+                onHotkeyEvent((Key)KeyboardHookAlt.StaticKey, Key.Enter);
             }
         }
 
@@ -247,32 +246,9 @@ namespace GoToWindow.Windows
             }
         }
 
-        // https://www.codeproject.com/Tips/76427/How-to-bring-window-to-top-with-SetForegroundWindo
-        // https://www.cnblogs.com/rosesmall/p/5759804.html
-        // https://blog.csdn.net/chengjunlin0793/article/details/49950387
-        private void SetForegroundWindowInternal(IntPtr hWnd)
+        private void switchToWin(IWindowEntry tag)
         {
-            if (!SetForegroundWindow(hWnd))
-            {
-                keybd_event(VK_MENU, 0, KEYEVENTF_EXTENDEDKEY | 0, 0);
-                SetForegroundWindow(hWnd);
-                keybd_event(VK_MENU, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
-            }
-        }
-        [DllImport("User32.dll")]
-        public static extern void keybd_event(Byte bVk, Byte bScan, Int32 dwFlags, Int32 dwExtraInfo);
-
-        [DllImport("user32.dll ", SetLastError = true)]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
-        [DllImport("user32.dll ", SetLastError = true)]
-        private static extern void SwitchToThisWindow(IntPtr hWnd, bool fAltTab);
-
-        [DllImport("user32.dll", EntryPoint = "ShowWindow", CharSet = CharSet.Auto)]
-        private static extern int ShowWindow(IntPtr hwnd, int nCmdShow);
-        private void showWin(IWindowEntry tag)
-        {
-            ShowWindow(tag.HWnd, 1);
-            SwitchToThisWindow(tag.HWnd, true);
+            WindowToForeground.ForceWindowToForeground(tag.HWnd);
             HideWin();
         }
         private void onHotkeyEvent(Key key, Key direct)
@@ -309,13 +285,13 @@ namespace GoToWindow.Windows
                     case Key.Right: this.MoveFocus(FocusNavigationDirection.Next); break;
                     case Key.Left: this.MoveFocus(FocusNavigationDirection.Previous); break;
                     default:
-                        var find = false; foreach (var item in mWins.Windows) { if (item.hotKey > 0 && item.hotKey == (int)key) { find = true; showWin(item); break; } }
+                        var find = false; foreach (var item in mWins.Windows) { if (item.hotKey > 0 && item.hotKey == (int)key) { find = true; switchToWin(item); break; } }
                         if (!find)
                         {
                             // 如果不是自定义的热键
                             switch (key)
                             {
-                                case Key.D2: for (var i = 2; i < mWins.Windows.Count; i++) { if (mWins.Windows.ElementAt(1).ProcessName.Equals(mWins.Windows.ElementAt(i).ProcessName)) { showWin(mWins.Windows.ElementAt(i)); break; } } break; // 数字键2,打开第二个相同的程序窗口
+                                case Key.D2: for (var i = 2; i < mWins.Windows.Count; i++) { if (mWins.Windows.ElementAt(1).ProcessName.Equals(mWins.Windows.ElementAt(i).ProcessName)) { switchToWin(mWins.Windows.ElementAt(i)); break; } } break; // 数字键2,打开第二个相同的程序窗口
                             }
                         }
                         break;
@@ -325,7 +301,7 @@ namespace GoToWindow.Windows
             if (Keyboard.IsKeyUp(Key.LeftAlt) && isShow)
             {
                 var tag = (IWindowEntry)mFocusBtn.Tag;
-                showWin(tag);
+                switchToWin(tag);
             }
         }
 
@@ -366,8 +342,13 @@ namespace GoToWindow.Windows
         }
         private void MenuItem_Add_Shortcut_Click(object sender, RoutedEventArgs e)
         {
-            var win = new WinShortcut();
+            var win = new WinSetHotkey();
             win.Show(mRightClickBtn.Tag as IWindowEntry);
+        }
+
+        private void MenuItem_Exit_Application_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }
