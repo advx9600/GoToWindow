@@ -65,7 +65,6 @@ namespace GotoWindow2.Windows
                 {
                     i++;
                     var btn = buildBtn(win, setElementWidth, setElementMargin);
-                    if (i == 2) mFocusBtn = btn;
                     stackPanel.Children.Add(btn);
                 }
 
@@ -113,10 +112,6 @@ namespace GotoWindow2.Windows
                         mWins.Windows.Insert(i, win);
                         stackPanel.Children.Insert(i, buildBtn(win, setElementWidth, setElementMargin));
                     }
-                    if (i == 1)
-                    {
-                        mFocusBtn = stackPanel.Children[1] as Button;
-                    }
                     // 去掉多余的
                     if (i == wins.Windows.Count - 1)
                     {
@@ -128,6 +123,9 @@ namespace GotoWindow2.Windows
                     }
                 }
             }
+
+            if (stackPanel.Children.Count > 0)
+                mFocusBtn = stackPanel.Children[stackPanel.Children.Count > 1 ? 1 : 0] as Button;
 
             if (isNeedRest)
             {
@@ -205,16 +203,16 @@ namespace GotoWindow2.Windows
         {
             if (!isShow)
             {
-                isShow = true;
                 resetData();
-                Activate();
-                Show();
-                // 需要确保显示
-                IntPtr hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
-
-                WindowToForeground.SetForegroundWindowInternal(hwnd);
-                if (mWins != null && mWins.Windows.Count > 1)
+                if (mWins != null && mWins.Windows.Count > 0)
                 {
+                    isShow = true;
+                    Activate();
+                    Show();
+                    // 需要确保显示
+                    IntPtr hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
+
+                    WindowToForeground.SetForegroundWindowInternal(hwnd);
                     mFocusBtn.Focus();
                 }
             }
@@ -300,8 +298,11 @@ namespace GotoWindow2.Windows
             // 逻辑上只需要捕捉alt键，但有时候按键太快,会捕捉失败，需要特别判断
             if (Keyboard.IsKeyUp(Key.LeftAlt) && isShow)
             {
-                var tag = (IWindowEntry)mFocusBtn.Tag;
-                switchToWin(tag);
+                if (mFocusBtn != null)
+                {
+                    var tag = (IWindowEntry)mFocusBtn.Tag;
+                    switchToWin(tag);
+                }
             }
         }
 
