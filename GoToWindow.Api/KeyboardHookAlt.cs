@@ -92,11 +92,12 @@ namespace GoToWindow.Api
             UnhookWindowsHookEx(_hookID);
         }
 
+        // https://social.msdn.microsoft.com/Forums/en-US/abca8dad-b103-436d-aad3-48443e4b95b5/disabling-windows-key-and-alttab-key?forum=wpf
         private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
             if (nCode != HC_ACTION)
                 return CallNextHookEx(_hookID, nCode, wParam, lParam);
-
+            
             var keyInfo = (Kbdllhookstruct)Marshal.PtrToStructure(lParam, typeof(Kbdllhookstruct));
 
 #if (DEBUG_KEYS)
@@ -104,13 +105,33 @@ namespace GoToWindow.Api
 #endif
 
             StaticKey = keyInfo.VkCode;
-            if (keyInfo.VkCode == 0x1B || keyInfo.VkCode == 0x09 && (GetAsyncKeyState(0xA4) < 0))
-            {
-                if (wParam == (IntPtr)WM_SYSKEYDOWN)
-                    _callback();
-                return (IntPtr)1;
-            }
-
+            //if (keyInfo.VkCode == 0x1B || keyInfo.VkCode == 0x09 && (GetAsyncKeyState(0xA4) < 0))
+            //{
+            //    if (wParam == (IntPtr)WM_SYSKEYDOWN)
+            //        _callback();
+            //    return (IntPtr)1;
+            //}
+            if (nCode >= 0)
+                switch ((int)wParam)
+                {
+                    case 256: // WM_KEYDOWN
+                    case 257: // WM_KEYUP
+                    case 260: // WM_SYSKEYDOWN
+                    case 261: // M_SYSKEYUP
+                        if (
+                            (keyInfo.VkCode == 0x09 && keyInfo.Flags == 32) || // Alt+Tab
+                            (keyInfo.Flags == 0x1b && keyInfo.Flags == 32)) // || // Alt+Esc
+                            //(lParam.vkCode == 0x73 && lParam.flags == 32) || // Alt+F4
+                            //(lParam.vkCode == 0x1b && lParam.flags == 0) || // Ctrl+Esc
+                            //(lParam.vkCode == 0x5b && lParam.flags == 1) || // Left Windows Key 
+                            //(lParam.vkCode == 0x5c && lParam.flags == 1))    // Right Windows Key 
+                        {
+                            if ((int)wParam == WM_SYSKEYDOWN)
+                                _callback();
+                            return (IntPtr)1; //Do not handle key events
+                        }
+                        break;
+                }
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
         }
         public static int StaticKey = 0;
