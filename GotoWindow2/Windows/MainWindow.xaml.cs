@@ -118,8 +118,8 @@ namespace GotoWindow2.Windows
                         while (mWins.Windows.Count > wins.Windows.Count)
                         {
                             isNeedRest = true;
-                            mWins.Windows.RemoveAt(mWins.Windows.Count - 1);
                             stackPanel.Children.RemoveAt(mWins.Windows.Count - 1);
+                            mWins.Windows.RemoveAt(mWins.Windows.Count - 1);
                         }
                     }
                 }
@@ -154,13 +154,12 @@ namespace GotoWindow2.Windows
             btn.Margin = new Thickness(setElementMargin, 0, setElementMargin, 0);
             var backImg = CoreSearchResult.LoadIcon(win);
             btn.Background = new ImageBrush(backImg);
-            if (backImg == null) { btn.Foreground = System.Windows.Media.Brushes.White; btn.Content = win.ProcessName; }
+            if (backImg == null) { btn.Foreground = Brushes.White; btn.Content = win.ProcessName; }
             btn.BorderBrush = null;
             btn.GotFocus += Btn_GotFocus;
             btn.FocusVisualStyle = (Style)FindResource("newFocusStyle");
             btn.PreviewMouseDown += Btn_PreviewMouseDown;
             btn.Tag = win;
-            win.onHotkeyUpdate = OnHotkeyUpdateEvent;
             SetHotkey(win);
             return btn;
         }
@@ -346,8 +345,7 @@ namespace GotoWindow2.Windows
         }
         private void MenuItem_Add_Shortcut_Click(object sender, RoutedEventArgs e)
         {
-            var win = new WinSetHotkey();
-            win.Show(mRightClickBtn.Tag as IWindowEntry);
+            new WinSetHotkey().Show(mRightClickBtn.Tag as IWindowEntry, OnHotkeyUpdateEvent);
         }
 
         private void MenuItem_Exit_Application_Click(object sender, RoutedEventArgs e)
