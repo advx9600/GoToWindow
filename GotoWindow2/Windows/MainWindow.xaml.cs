@@ -118,7 +118,7 @@ namespace GotoWindow2.Windows
                         while (mWins.Windows.Count > wins.Windows.Count)
                         {
                             isNeedRest = true;
-                            mWins.Windows.RemoveAt(mWins.Windows.Count-1);
+                            mWins.Windows.RemoveAt(mWins.Windows.Count - 1);
                             stackPanel.Children.RemoveAt(mWins.Windows.Count - 1);
                         }
                     }
@@ -152,7 +152,9 @@ namespace GotoWindow2.Windows
             Button btn = new Button();
             btn.Width = btn.Height = setElementWidth;
             btn.Margin = new Thickness(setElementMargin, 0, setElementMargin, 0);
-            btn.Background = new ImageBrush(CoreSearchResult.LoadIcon(win));
+            var backImg = CoreSearchResult.LoadIcon(win);
+            btn.Background = new ImageBrush(backImg);
+            if (backImg == null) { btn.Foreground = System.Windows.Media.Brushes.White; btn.Content = win.ProcessName; }
             btn.BorderBrush = null;
             btn.GotFocus += Btn_GotFocus;
             btn.FocusVisualStyle = (Style)FindResource("newFocusStyle");
