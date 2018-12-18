@@ -28,8 +28,8 @@ namespace GotoWindow2.Windows
         {
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             InitializeComponent();
-            mListHotkey = Database.GetAllHotKey();
-            // set hook
+            mListHotkey = TbHotkey.GetAllHotKey();
+            mListHideWin = TbHideWin.GetAll();
         }
 
         private void SetHotkey(IWindowEntry win)
@@ -56,6 +56,21 @@ namespace GotoWindow2.Windows
         {
             var isNeedRest = false;
             var wins = WindowsListFactory.Load();
+            // remove hide window
+            if (mListHideWin.Count > 0)
+                for (int i = 0; i < wins.Windows.Count; i++)
+                {
+                    var win = wins.Windows.ElementAt(i);
+                    for (int j = 0; j < mListHideWin.Count; j++)
+                    {
+                        if (win.ProcessName.Equals(mListHideWin.ElementAt(j).name) && win.Title.Equals(mListHideWin.ElementAt(j).title))
+                        {
+                            wins.Windows.RemoveAt(i--);
+                            break;
+                        }
+                    }
+                }
+
             if (mWins == null)
             {
                 isNeedRest = true;
@@ -166,7 +181,7 @@ namespace GotoWindow2.Windows
 
         private void OnHotkeyUpdateEvent()
         {
-            mListHotkey = DB.Database.GetAllHotKey();
+            mListHotkey = TbHotkey.GetAllHotKey();
             // 把key更新
             foreach (var win in mWins.Windows)
             {
@@ -174,6 +189,10 @@ namespace GotoWindow2.Windows
             }
         }
 
+        private void OnHideWinUpdate()
+        {
+            mListHideWin = TbHideWin.GetAll();
+        }
         private void Btn_GotFocus(object sender, RoutedEventArgs e)
         {
             mFocusBtn = sender as Button;
@@ -200,6 +219,7 @@ namespace GotoWindow2.Windows
         private WindowsList mWins;
         private Button mFocusBtn;
         private List<TbHotKeyEntry> mListHotkey;
+        private List<TbHideWinEntry> mListHideWin;
 
         public void ShowFront()
         {
@@ -351,6 +371,10 @@ namespace GotoWindow2.Windows
         private void MenuItem_Exit_Application_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+        }
+        private void MenuItem_NotShow_Click(object sender, RoutedEventArgs e)
+        {
+            new WinHideApp().Show(mRightClickBtn.Tag as IWindowEntry, OnHideWinUpdate);
         }
     }
 }

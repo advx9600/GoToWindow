@@ -22,7 +22,7 @@ namespace GotoWindow2.Windows
     public partial class WinSetHotkey : Window
     {
         private IWindowEntry mWin;
-
+        private Action mCallback;
         public WinSetHotkey()
         {
             InitializeComponent();
@@ -43,9 +43,10 @@ namespace GotoWindow2.Windows
             }
         }
 
-        internal void Show(IWindowEntry win)
+        internal void Show(IWindowEntry win,Action callback)
         {
             mWin = win;
+            mCallback = callback;
             BoxInfo.Text = win.ProcessName + "     快捷键:" + (Key)win.hotKey + "\n" + win.Title;
             BoxInfo.Text += "\n按alt+tab，松开tab,然后按快捷键，即可切换到对应的窗口";
             BoxInfo.Text += "\n按Delete，删除当前快捷键";
@@ -57,8 +58,8 @@ namespace GotoWindow2.Windows
             if (win.hotKey != (int)key)
             {
                 win.hotKey = (int)key;
-                Database.updateHotkey(win);
-                win.onHotkeyUpdate();
+                TbHotkey.updateHotkey(win);
+                mCallback();
             }
         }
     }

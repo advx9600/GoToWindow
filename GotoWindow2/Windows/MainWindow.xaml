@@ -43,6 +43,7 @@
         </Style>
         <ContextMenu x:Key="cmButton">
             <MenuItem Header="add short cut" Click="MenuItem_Add_Shortcut_Click"/>
+            <MenuItem Header="not show this window" Click="MenuItem_NotShow_Click" />
             <MenuItem Header="exit application" Click="MenuItem_Exit_Application_Click" />
         </ContextMenu>
     </Window.Resources>

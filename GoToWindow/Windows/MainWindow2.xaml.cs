@@ -157,7 +157,7 @@ namespace GoToWindow.Windows
             btn.FocusVisualStyle = (Style)FindResource("newFocusStyle");
             btn.PreviewMouseDown += Btn_PreviewMouseDown;
             btn.Tag = win;
-            win.onHotkeyUpdate = OnHotkeyUpdateEvent;
+            //win.onHotkeyUpdate = OnHotkeyUpdateEvent;
             SetHotkey(win);
             return btn;
         }

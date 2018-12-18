@@ -18,7 +18,5 @@ namespace GoToWindow.Api
 		bool IsSameWindow(IWindowEntry other);
 
         int hotKey { get; set; }
-
-        Action onHotkeyUpdate { get; set; }
     }
 }
