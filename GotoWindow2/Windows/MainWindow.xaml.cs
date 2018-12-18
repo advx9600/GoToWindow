@@ -115,10 +115,11 @@ namespace GotoWindow2.Windows
                     // 去掉多余的
                     if (i == wins.Windows.Count - 1)
                     {
-                        if (mWins.Windows.Count > wins.Windows.Count)
+                        while (mWins.Windows.Count > wins.Windows.Count)
                         {
                             isNeedRest = true;
-                            stackPanel.Children.RemoveRange(wins.Windows.Count, mWins.Windows.Count - wins.Windows.Count);
+                            mWins.Windows.RemoveAt(mWins.Windows.Count-1);
+                            stackPanel.Children.RemoveAt(mWins.Windows.Count - 1);
                         }
                     }
                 }
