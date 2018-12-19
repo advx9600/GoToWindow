@@ -58,6 +58,22 @@ namespace GoToWindow.Plugins.Core.Utils
         public static ImageBrush DrawText(String text, Font font, System.Drawing.Color textColor, System.Drawing.Color backColor)
         {
             //first, create a dummy bitmap just to get a graphics object
+            if (!String.IsNullOrEmpty(text))
+            {
+                //if (text.Length > 10)
+                //{
+                //    text = text.Substring(text.Length - 10 - 1);
+                //}
+            }
+            if (font == null)
+            {
+                //System.Drawing.FontFamily fontFamily = new System.Drawing.FontFamily("Arial");
+                font = new Font(
+                   "Arial",
+                   30,
+                   System.Drawing.FontStyle.Regular);
+            }
+
             System.Drawing.Image img = new Bitmap(1, 1);
             Graphics drawing = Graphics.FromImage(img);
 

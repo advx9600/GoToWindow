@@ -168,20 +168,17 @@ namespace GotoWindow2.Windows
             btn.Width = btn.Height = setElementWidth;
             btn.Margin = new Thickness(setElementMargin, 0, setElementMargin, 0);
             var backImg = CoreSearchResult.LoadIcon(win);
-            btn.Background = new ImageBrush(backImg);
-            if (backImg == null)
+            if (backImg == null && !string.IsNullOrEmpty(win.ProcessName))
             {
-                // https://stackoverflow.com/questions/1449276/multiline-text-in-a-wpf-button
-                // https://www.codeproject.com/Questions/373457/How-to-center-align-text-inside-a-WPF-button-at-ru
-                TextBlock tb = new TextBlock();
-                tb.Foreground = Brushes.White;
-                tb.TextWrapping = TextWrapping.Wrap;
-                tb.Text = win.ProcessName;
-                btn.Content = tb;
+                btn.Background = GoToWindow.Plugins.Core.Utils.IconLoader.DrawText(win.ProcessName, null, System.Drawing.Color.White, System.Drawing.Color.Transparent);
+            }
+            else
+            {
+                btn.Background = new ImageBrush(backImg);
             }
             btn.BorderBrush = null;
             btn.GotFocus += Btn_GotFocus;
-            btn.FocusVisualStyle = (Style)FindResource("newFocusStyle");
+            btn.FocusVisualStyle = null;
             btn.PreviewMouseDown += Btn_PreviewMouseDown;
             btn.Tag = win;
             SetHotkey(win);

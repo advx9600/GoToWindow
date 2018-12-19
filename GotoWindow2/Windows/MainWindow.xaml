@@ -13,17 +13,6 @@
         <SolidColorBrush Opacity="0.8" Color="#001f55"></SolidColorBrush>
     </Window.Background>
     <Window.Resources>
-
-
-        <Style x:Key="newFocusStyle" >
-            <Setter Property="Control.Template">
-                <Setter.Value>
-                    <ControlTemplate>
-                        <Rectangle Margin="-8" StrokeThickness="3" Stroke="White"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
         <Style TargetType="{x:Type Button}">
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
@@ -31,6 +20,16 @@
                         <Setter.Value>
                             <ControlTemplate>
                                 <Rectangle Fill="{TemplateBinding Background}" Margin="-3" StrokeThickness="1" Stroke="White" />
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsFocused" Value="True" >
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <!--https://www.cnblogs.com/NomyfanChan/p/wpf_button_style.html-->
+                                <Rectangle Fill="{TemplateBinding Background}" Margin="-8" StrokeThickness="3" Stroke="White" />
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
