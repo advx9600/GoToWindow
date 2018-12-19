@@ -320,7 +320,32 @@ namespace GotoWindow2.Windows
                             // 如果不是自定义的热键
                             switch (key)
                             {
-                                case Key.D2: for (var i = 2; i < mWins.Windows.Count; i++) { if (mWins.Windows.ElementAt(1).ProcessName.Equals(mWins.Windows.ElementAt(i).ProcessName)) { switchToWin(mWins.Windows.ElementAt(i)); break; } } break; // 数字键2,打开第二个相同的程序窗口
+                                case Key.D2:
+                                    var findD2Action = false;
+                                    // 寻找第二个图标的相同的窗口,找到则显示
+                                    for (var i = 2; i < mWins.Windows.Count; i++)
+                                    {
+                                        if (mWins.Windows.ElementAt(1).ProcessName.Equals(mWins.Windows.ElementAt(i).ProcessName))
+                                        {
+                                            switchToWin(mWins.Windows.ElementAt(i));
+                                            findD2Action = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!findD2Action)
+                                    {
+                                        // 寻找第一个图标的相同的窗口,找到则显示
+                                        for (var i = 2; i < mWins.Windows.Count; i++)
+                                        {
+                                            if (mWins.Windows.ElementAt(0).ProcessName.Equals(mWins.Windows.ElementAt(i).ProcessName))
+                                            {
+                                                switchToWin(mWins.Windows.ElementAt(i));
+                                                findD2Action = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    break; // 数字键2,打开第二个相同的程序窗口
                             }
                         }
                         break;
