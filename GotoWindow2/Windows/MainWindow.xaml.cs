@@ -212,7 +212,7 @@ namespace GotoWindow2.Windows
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-
+                switchToWin(((Button)sender).Tag as IWindowEntry);
             }
             else
             {
