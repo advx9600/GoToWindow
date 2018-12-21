@@ -33,8 +33,7 @@ namespace GotoWindow2.Windows
             if (e.Key == Key.Escape) Close();
             else
             {
-
-                if (MessageBox.Show(e.Key == Key.Delete ? string.Format("确认快捷键{0}吗?", (Key)mWin.hotKey) : string.Format("确认快捷键是 {0} 吗", e.Key), "", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                if (MessageBox.Show(e.Key == Key.Delete ? string.Format("确认删除快捷键{0}吗?", (Key)mWin.hotKey) : string.Format("确认快捷键是 {0} 吗", e.Key), "", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
                 {
                     SaveHotKey(mWin, e.Key == Key.Delete ? 0 : e.Key);
                     Close();
@@ -43,7 +42,7 @@ namespace GotoWindow2.Windows
             }
         }
 
-        internal void Show(IWindowEntry win,Action callback)
+        internal void Show(IWindowEntry win, Action callback)
         {
             mWin = win;
             mCallback = callback;
