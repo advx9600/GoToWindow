@@ -26,7 +26,7 @@ namespace GotoWindow2.DB
             {
                 if (!dr.Read())
                 {
-                    ExeSQL(string.Format("CREATE TABLE {0} (id integer primary key autoincrement,name varchar(100),key integer)", TB_HOTKEY));
+                    ExeSQL(string.Format("CREATE TABLE {0} (id integer primary key autoincrement,name varchar(100),key integer,exe_path varchar(255))", TB_HOTKEY));
                     ExeSQL(string.Format("create table {0} (id INTEGER primary key autoincrement,name varchar(100),title varchar(100))", TB_HIDEWIN));
                 }
             }

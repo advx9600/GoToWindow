@@ -311,7 +311,34 @@ namespace GotoWindow2.Windows
                     case Key.Right: this.MoveFocus(FocusNavigationDirection.Next); break;
                     case Key.Left: this.MoveFocus(FocusNavigationDirection.Previous); break;
                     default:
-                        var find = false; foreach (var item in mWins.Windows) { if (item.hotKey > 0 && item.hotKey == (int)key) { find = true; switchToWin(item); break; } }
+                        var find = false;
+                        // 如果是自定义的按键
+                        foreach (var item in mWins.Windows)
+                        {
+                            if (item.hotKey > 0 && item.hotKey == (int)key)
+                            { find = true; switchToWin(item); break; }
+                        }
+                        // 如果该窗口未打开，则打开该应用
+                        if (!find)
+                        {
+                            foreach (var item in mListHotkey)
+                            {
+                                if ((int)key == item.key)
+                                {
+                                    try
+                                    {
+                                        ProcessExtensions.StartProcessAsync(string.IsNullOrEmpty(item.executablePath) ? item.name : item.executablePath);
+                                        find = true;
+                                        HideWin();
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Console.WriteLine("start process failed:" + e.Message);
+                                    }
+                                    break;
+                                }
+                            }
+                        }
                         if (!find)
                         {
                             // 如果不是自定义的热键

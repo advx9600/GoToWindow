@@ -12,6 +12,7 @@ namespace GoToWindow.Api
         public string ProcessName { get; set; }
         public int hotKey { get; set; }
         public Action onHotkeyUpdate { get; set; }
+        public string ExecutablePath { get; set; }
 
         public bool Focus()
         {

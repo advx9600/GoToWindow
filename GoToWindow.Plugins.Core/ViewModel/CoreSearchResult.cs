@@ -8,62 +8,62 @@ using GoToWindow.Plugins.Core.Utils;
 
 namespace GoToWindow.Plugins.Core.ViewModel
 {
-	public class CoreSearchResult : SearchResultBase, IWindowSearchResult
-	{
-		private readonly IWindowEntry _entry;
-		private BitmapFrame _icon;
+    public class CoreSearchResult : SearchResultBase, IWindowSearchResult
+    {
+        private readonly IWindowEntry _entry;
+        private BitmapFrame _icon;
 
-	    public BitmapFrame Icon => _icon ?? (_icon = LoadIcon());
-		public string Title => _entry.Title;
-		public string ProcessName => _entry.ProcessName;
-		public IntPtr HWnd => _entry.HWnd;
+        public BitmapFrame Icon => _icon ?? (_icon = LoadIcon());
+        public string Title => _entry.Title;
+        public string ProcessName => _entry.ProcessName;
+        public IntPtr HWnd => _entry.HWnd;
 
-		public bool IsVisible => _entry.IsVisible;
-		public string Error { get; private set; }
+        public bool IsVisible => _entry.IsVisible;
+        public string Error { get; private set; }
 
-	    public CoreSearchResult(IWindowEntry entry, Func<UserControl> viewCtor)
-			: base(viewCtor)
-		{
-			_entry = entry;
-		}
+        public CoreSearchResult(IWindowEntry entry, Func<UserControl> viewCtor)
+            : base(viewCtor)
+        {
+            _entry = entry;
+        }
 
-		public void Select()
-		{
-			_entry.Focus();
-		}
+        public void Select()
+        {
+            _entry.Focus();
+        }
 
-		public bool IsShown(string searchQuery)
-		{
-			return IsShown(searchQuery, ProcessName, Title);
-		}
+        public bool IsShown(string searchQuery)
+        {
+            return IsShown(searchQuery, ProcessName, Title);
+        }
 
         public void SetError(string message)
         {
             Error = message;
         }
 
-	    private BitmapFrame LoadIcon()
-	    {
-	        string executable;
+        private BitmapFrame LoadIcon()
+        {
+            //string executable;
 
-	        using (var process = Process.GetProcessById((int) _entry.ProcessId))
-	        {
-	            executable = process.GetExecutablePath();
-	        }
+            //using (var process = Process.GetProcessById((int) _entry.ProcessId))
+            //{
+            //    executable = process.GetExecutablePath();
+            //}
 
-	        return IconLoader.LoadIcon(_entry.IconHandle, executable);
-	    }
+            return IconLoader.LoadIcon(_entry.IconHandle, _entry.ExecutablePath);
+        }
 
         public static BitmapFrame LoadIcon(IWindowEntry win)
         {
-            string executable;
+            //string executable;
 
-            using (var process = Process.GetProcessById((int)win.ProcessId))
-            {
-                executable = process.GetExecutablePath();
-            }
+            //using (var process = Process.GetProcessById((int)win.ProcessId))
+            //{
+            //    executable = process.GetExecutablePath();
+            //}
 
-            return IconLoader.LoadIcon(win.IconHandle, executable);
+            return IconLoader.LoadIcon(win.IconHandle, win.ExecutablePath);
         }
-	}
+    }
 }
