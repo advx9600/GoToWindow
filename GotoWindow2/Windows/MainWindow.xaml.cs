@@ -421,7 +421,7 @@ namespace GotoWindow2.Windows
                 Hide();
             }
         }
-        private void MenuItem_Add_Shortcut_Click(object sender, RoutedEventArgs e)
+        private void MenuItem_SetHotKey_Click(object sender, RoutedEventArgs e)
         {
             new WinSetHotkey().Show(mRightClickBtn.Tag as IWindowEntry, OnHotkeyUpdateEvent);
         }
