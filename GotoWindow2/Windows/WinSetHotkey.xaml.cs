@@ -33,7 +33,13 @@ namespace GotoWindow2.Windows
             if (e.Key == Key.Escape) Close();
             else
             {
-                if (MessageBox.Show(e.Key == Key.Delete ? string.Format("确认删除快捷键{0}吗?", (Key)mWin.hotKey) : string.Format("确认快捷键是 {0} 吗", e.Key), "", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                if (e.Key == Key.F11)
+                {
+                    // 进入详细设置
+                    new WinSetHotkeyDetail().Show(mWin, mCallback);
+                    Close();
+                }
+                else if (MessageBox.Show(e.Key == Key.Delete ? string.Format("确认删除快捷键{0}吗?", (Key)mWin.hotKey) : string.Format("确认快捷键是 {0} 吗", e.Key), "", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
                 {
                     SaveHotKey(mWin, e.Key == Key.Delete ? 0 : e.Key);
                     Close();
@@ -48,8 +54,8 @@ namespace GotoWindow2.Windows
             mCallback = callback;
             BoxInfo.Text = "请直接输入快捷键\n";
             BoxInfo.Text += "\n说明：按alt+tab，松开tab,然后按快捷键，即可切换到对应的窗口";
-            BoxInfo.Text += "\n\n当前信息："+win.ProcessName + "     快捷键:" + (Key)win.hotKey + "   " + win.Title;
-            BoxInfo.Text += "\n\n按Delete，删除当前快捷键\n";
+            BoxInfo.Text += "\n\n当前信息：" + win.ProcessName + "     快捷键:" + (Key)win.hotKey + "   " + win.Title;
+            BoxInfo.Text += "\n\n按Delete，删除当前快捷键\n按F11进入详细设置";
             Show();
         }
 
@@ -58,7 +64,7 @@ namespace GotoWindow2.Windows
             if (win.hotKey != (int)key)
             {
                 win.hotKey = (int)key;
-                TbHotkey.updateHotkey(win);
+                TbHotkey.updateHotkey(win, string.IsNullOrEmpty(win.ExecutablePath) ? false : true);
                 mCallback();
             }
         }

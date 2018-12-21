@@ -28,7 +28,7 @@ namespace GotoWindow2.Windows
         {
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             InitializeComponent();
-            mListHotkey = TbHotkey.GetAllHotKey();
+            mListHotkey = TbHotkey.GetAll();
             mListHideWin = TbHideWin.GetAll();
         }
 
@@ -187,7 +187,7 @@ namespace GotoWindow2.Windows
 
         private void OnHotkeyUpdateEvent()
         {
-            mListHotkey = TbHotkey.GetAllHotKey();
+            mListHotkey = TbHotkey.GetAll();
             // 把key更新
             foreach (var win in mWins.Windows)
             {
@@ -224,7 +224,7 @@ namespace GotoWindow2.Windows
         private bool isShow = false;
         private WindowsList mWins;
         private Button mFocusBtn;
-        private List<TbHotKeyEntry> mListHotkey;
+        private List<TbHotKeyEntity> mListHotkey;
         private List<TbHideWinEntry> mListHideWin;
 
         public void ShowFront()

@@ -1,0 +1,32 @@
+﻿<Window x:Class="GotoWindow2.Windows.WinSetHotkeyDetail"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GotoWindow2.Windows"
+        mc:Ignorable="d"
+        Title="WinSetHotkeyDetail" Height="450" Width="800">
+    <Grid>
+        <DataGrid Name="dataGrid1" AutoGenerateColumns="False" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="程序名" Binding="{Binding name}" />
+                <DataGridTextColumn Header="按键" Binding="{Binding bindKey}" />
+                <DataGridTextColumn Header="程序路径" Binding="{Binding executablePath}" />
+                <DataGridTemplateColumn Header="设置程序路径">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Click="Button_SetExePath_Click">设置</Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="删除">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Click="Button_Del_Click">Delete</Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
