@@ -56,6 +56,13 @@ namespace GotoWindow2.Windows
         {
             var isNeedRest = false;
             var wins = WindowsListFactory.Load();
+            // 如果为空则增加Empty提示
+            if (wins.Windows.Count == 0)
+            {
+                IWindowEntry entry = new WindowEntry();
+                entry.ProcessName = "Empty";
+                wins.Windows.Add(entry);
+            }
             // remove hide window
             if (mListHideWin.Count > 0)
                 for (int i = 0; i < wins.Windows.Count; i++)
@@ -127,16 +134,13 @@ namespace GotoWindow2.Windows
                         mWins.Windows.Insert(i, win);
                         stackPanel.Children.Insert(i, buildBtn(win, setElementWidth, setElementMargin));
                     }
-                    // 去掉多余的
-                    if (i == wins.Windows.Count - 1)
-                    {
-                        while (mWins.Windows.Count > wins.Windows.Count)
-                        {
-                            isNeedRest = true;
-                            stackPanel.Children.RemoveAt(mWins.Windows.Count - 1);
-                            mWins.Windows.RemoveAt(mWins.Windows.Count - 1);
-                        }
-                    }
+                }
+                // 去掉多余的
+                while (mWins.Windows.Count > wins.Windows.Count)
+                {
+                    isNeedRest = true;
+                    stackPanel.Children.RemoveAt(mWins.Windows.Count - 1);
+                    mWins.Windows.RemoveAt(mWins.Windows.Count - 1);
                 }
             }
 
@@ -241,7 +245,8 @@ namespace GotoWindow2.Windows
                     IntPtr hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
 
                     WindowToForeground.SetForegroundWindowInternal(hwnd);
-                    mFocusBtn.Focus();
+                    if (mFocusBtn != null)
+                        mFocusBtn.Focus();
                 }
             }
             else
