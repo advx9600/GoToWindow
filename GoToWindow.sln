@@ -51,6 +51,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AAATest", "AAATest\AAATest.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GotoWindow2", "GotoWindow2\GotoWindow2.csproj", "{D0826963-4EE3-4322-B54E-4C08BD617FA0}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Install", "Install\Install.vdproj", "{1CC31E34-43D3-46B2-96E6-7E8FCD77A7B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -98,6 +100,8 @@ Global
 		{D0826963-4EE3-4322-B54E-4C08BD617FA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0826963-4EE3-4322-B54E-4C08BD617FA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0826963-4EE3-4322-B54E-4C08BD617FA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CC31E34-43D3-46B2-96E6-7E8FCD77A7B8}.Debug|Any CPU.ActiveCfg = Debug
+		{1CC31E34-43D3-46B2-96E6-7E8FCD77A7B8}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
