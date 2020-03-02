@@ -30,6 +30,13 @@ namespace GotoWindow2.Windows
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
+            Key[] ignoreKeys = { Key.LeftAlt, Key.RightAlt, Key.LeftCtrl, Key.LeftCtrl, Key.LeftShift, Key.RightShift };
+            foreach (var ignoreKey in ignoreKeys)
+            {
+                if (ignoreKey == e.Key)
+                    return;
+            }
+
             if (e.Key == Key.Escape) Close();
             else
             {
